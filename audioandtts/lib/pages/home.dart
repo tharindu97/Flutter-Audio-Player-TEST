@@ -1,5 +1,7 @@
 import 'package:audioandtts/models/quote.dart';
+import 'package:audioandtts/pages/quoteToSpeech.dart';
 import 'package:audioandtts/services/quote.dart';
+import 'package:audioandtts/widgets/customBtn.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -23,19 +25,27 @@ class HomePage extends StatelessWidget {
           }
           Quote? quote = snapshot.data;
           return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
                 width: double.infinity,
               ),
-              Text(
-                quote?.author ?? '',
-                style: TextStyle(fontSize: 25.0),
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Text(
+                  quote?.quote ?? '',
+                  style: TextStyle(fontSize: 25.0),
+                  textAlign: TextAlign.justify,
+                ),
+              ),
+              CustomBtn(
+                  onPressed: () => Navigator.of(context).pushNamed(QuoteToSpeech.routeName, arguments: QuoteToSpeechArguments(quote: quote!.quote),),
+                  icon: Icon(Icons.play_arrow_rounded),
+                  label: "Next",
               ),
             ],
           );
-      },
+        },
       ),
     );
   }
