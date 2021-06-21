@@ -1,3 +1,6 @@
+import 'package:audioandtts/constant/audio_url.dart';
+import 'package:audioandtts/models/audio.dart';
+import 'package:audioandtts/services/audio.dart';
 import 'package:audioandtts/utils/textToSpeech.dart';
 import 'package:audioandtts/widgets/customBtn.dart';
 import 'package:audioplayers/audioplayers.dart';
@@ -25,8 +28,7 @@ class _QuoteToSpeechState extends State<QuoteToSpeech> {
     super.initState();
     audioPlayer.onPlayerStateChanged.listen((PlayerState state) {
       setState(() {
-        playerState = state;
-
+          playerState = state;
       });
     });
   }
@@ -37,6 +39,7 @@ class _QuoteToSpeechState extends State<QuoteToSpeech> {
   Future<void> pauseMusic() async {
     await audioPlayer.pause();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -61,33 +64,34 @@ class _QuoteToSpeechState extends State<QuoteToSpeech> {
               CustomBtn(
                 onPressed: () {
                   setState(() {
-                    isPlaying = true;
+                    isPlaying = false;
                   });
                   UtilsTTS().speachTTS(
-                      text: quoteToSpeechArguments.quote,
-                      language: "en-US",
+                    text: quoteToSpeechArguments.quote,
+                    language: "en-US",
                   );
                 },
                 icon: Icon(isPlaying ? Icons.play_arrow_rounded : Icons.pause_rounded),
                 label: "TTS",
               ),
+
               CustomBtn(
                 onPressed: () {
-                  playerState == PlayerState.PLAYING ? pauseMusic() : playMusic(audioURL: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-14.mp3",);
+                  playerState == PlayerState.PLAYING ? pauseMusic() : playMusic(audioURL: AudioURL.BIRD_URL);
                 },
                 icon: Icon(playerState == PlayerState.PLAYING ? Icons.pause_rounded : Icons.play_arrow_rounded),
                 label: "Bird",
               ),
               CustomBtn(
                 onPressed: () {
-                  playerState == PlayerState.PLAYING ? pauseMusic() : playMusic(audioURL: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-14.mp3",);
+                  playerState == PlayerState.PLAYING ? pauseMusic() : playMusic(audioURL: AudioURL.THUNDER_URL,);
                 },
                 icon: Icon(playerState == PlayerState.PLAYING ? Icons.pause_rounded : Icons.play_arrow_rounded),
                 label: "Thunder",
               ),
               CustomBtn(
                 onPressed: () {
-                  playerState == PlayerState.PLAYING ? pauseMusic() : playMusic(audioURL: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-14.mp3",);
+                  playerState == PlayerState.PLAYING ? pauseMusic() : playMusic(audioURL: AudioURL.RAIN_URL,);
                 },
                 icon: Icon(playerState == PlayerState.PLAYING ? Icons.pause_rounded : Icons.play_arrow_rounded),
                 label: "Background",

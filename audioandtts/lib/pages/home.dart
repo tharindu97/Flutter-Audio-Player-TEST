@@ -2,7 +2,6 @@ import 'package:audioandtts/models/quote.dart';
 import 'package:audioandtts/pages/quoteToSpeech.dart';
 import 'package:audioandtts/services/quote.dart';
 import 'package:audioandtts/widgets/customBtn.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
