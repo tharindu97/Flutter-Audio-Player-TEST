@@ -1,6 +1,4 @@
 import 'package:audioandtts/constant/audio_url.dart';
-import 'package:audioandtts/models/audio.dart';
-import 'package:audioandtts/services/audio.dart';
 import 'package:audioandtts/utils/textToSpeech.dart';
 import 'package:audioandtts/widgets/customBtn.dart';
 import 'package:audioplayers/audioplayers.dart';
@@ -13,6 +11,7 @@ class QuoteToSpeechArguments{
 
 enum PlayerState { stopped, playing, paused }
 enum PlayerState1 { stopped1, playing1, paused1 }
+enum PlayerState2 { stopped2, playing2, paused2 }
 
 class QuoteToSpeech extends StatefulWidget {
   static const routeName = "/quoteToSpeech";
@@ -27,17 +26,40 @@ class _QuoteToSpeechState extends State<QuoteToSpeech> {
   late AudioPlayer audioPlayer;
   PlayerState playerState = PlayerState.stopped;
   get isPlaying => playerState == PlayerState.playing;
+
   //for second audio
   late AudioPlayer audioPlayer1;
   PlayerState1 playerState1 = PlayerState1.stopped1;
   get isPlaying1 => playerState1 == PlayerState1.playing1;
+
+  //for third audio
+  late AudioPlayer audioPlayer2;
+  PlayerState2 playerState2 = PlayerState2.stopped2;
+  get isPlaying2 => playerState2 == PlayerState2.playing2;
 
   @override
   void initState() {
     super.initState();
     audioPlayer =  AudioPlayer();
     audioPlayer1 =  AudioPlayer();
+    audioPlayer2 = AudioPlayer();
   }
+
+  //for first audio
+  Future playRain() async {
+    await audioPlayer.play(AudioURL.RAIN_URL);
+    setState(() {
+      playerState = PlayerState.playing;
+    });
+  }
+  Future stopRain() async {
+    await audioPlayer.stop();
+    setState(() {
+      playerState = PlayerState.stopped;
+    });
+  }
+
+  //for second audio
   Future playThunder() async {
     await audioPlayer1.play(AudioURL.THUNDER_URL);
     setState(() {
@@ -51,16 +73,17 @@ class _QuoteToSpeechState extends State<QuoteToSpeech> {
     });
   }
 
-  Future playRain() async {
-    await audioPlayer.play(AudioURL.RAIN_URL);
+  //for third audio
+  Future playBird() async {
+    await audioPlayer2.play(AudioURL.BIRD_URL);
     setState(() {
-      playerState = PlayerState.playing;
+      playerState2 = PlayerState2.playing2;
     });
   }
-  Future stopRain() async {
-    await audioPlayer.stop();
+  Future stopBird() async {
+    await audioPlayer2.stop();
     setState(() {
-      playerState = PlayerState.stopped;
+      playerState2 = PlayerState2.stopped2;
     });
   }
 
@@ -100,38 +123,21 @@ class _QuoteToSpeechState extends State<QuoteToSpeech> {
                 label: "TTS",
               ),
 
-              IconButton(
-                onPressed:() =>  playerState1 == PlayerState1.playing1 ? stopThunder() : playThunder(),
-                iconSize: 70.0,
-                icon:Icon(playerState1 == PlayerState1.playing1 ? Icons.pause_rounded : Icons.play_arrow_rounded, size: 55),
+              CustomBtn(
+                onPressed: () => playerState2 == PlayerState2.playing2 ? stopBird() : playBird(),
+                icon: Icon(playerState2 == PlayerState2.playing2 ? Icons.pause_rounded : Icons.play_arrow_rounded),
+                label: "Bird",
               ),
-              IconButton(
+              CustomBtn(
+                onPressed: () => playerState1 == PlayerState1.playing1 ? stopThunder() : playThunder(),
+                icon: Icon(playerState1 == PlayerState1.playing1 ? Icons.pause_rounded : Icons.play_arrow_rounded),
+                label: "Thunder",
+              ),
+              CustomBtn(
                 onPressed: () => playerState == PlayerState.playing ? stopRain() : playRain(),
-                iconSize: 55.0,
                 icon: Icon(playerState == PlayerState.playing ? Icons.pause_rounded : Icons.play_arrow_rounded),
+                label: "Rain",
               ),
-
-              // CustomBtn(
-              //   onPressed: () {
-              //     playerState == PlayerState.PLAYING ? pauseMusic() : playMusic(audioURL: AudioURL.BIRD_URL);
-              //   },
-              //   icon: Icon(playerState == PlayerState.PLAYING ? Icons.pause_rounded : Icons.play_arrow_rounded),
-              //   label: "Bird",
-              // ),
-              // CustomBtn(
-              //   onPressed: () {
-              //     playerState == PlayerState.PLAYING ? pauseMusic() : playMusic(audioURL: AudioURL.THUNDER_URL,);
-              //   },
-              //   icon: Icon(playerState == PlayerState.PLAYING ? Icons.pause_rounded : Icons.play_arrow_rounded),
-              //   label: "Thunder",
-              // ),
-              // CustomBtn(
-              //   onPressed: () {
-              //     playerState1 == PlayerState.PLAYING ? pauseMusic() : playMusic(audioURL: AudioURL.RAIN_URL,);
-              //   },
-              //   icon: Icon(playerState1 == PlayerState.PLAYING ? Icons.pause_rounded : Icons.play_arrow_rounded),
-              //   label: "Background",
-              // ),
             ],
           ),
         ],
