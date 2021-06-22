@@ -11,6 +11,9 @@ class QuoteToSpeechArguments{
   QuoteToSpeechArguments({required this.quote});
 }
 
+enum PlayerState { stopped, playing, paused }
+enum PlayerState1 { stopped1, playing1, paused1 }
+
 class QuoteToSpeech extends StatefulWidget {
   static const routeName = "/quoteToSpeech";
   @override
@@ -18,27 +21,49 @@ class QuoteToSpeech extends StatefulWidget {
 }
 
 class _QuoteToSpeechState extends State<QuoteToSpeech> {
+  bool playing = true;
 
-  AudioPlayer audioPlayer = AudioPlayer();
-  PlayerState playerState = PlayerState.PAUSED;
-  bool isPlaying = true;
+  //for first audio
+  late AudioPlayer audioPlayer;
+  PlayerState playerState = PlayerState.stopped;
+  get isPlaying => playerState == PlayerState.playing;
+  //for second audio
+  late AudioPlayer audioPlayer1;
+  PlayerState1 playerState1 = PlayerState1.stopped1;
+  get isPlaying1 => playerState1 == PlayerState1.playing1;
 
   @override
   void initState() {
     super.initState();
-    audioPlayer.onPlayerStateChanged.listen((PlayerState state) {
-      setState(() {
-          playerState = state;
-      });
+    audioPlayer =  AudioPlayer();
+    audioPlayer1 =  AudioPlayer();
+  }
+  Future playThunder() async {
+    await audioPlayer1.play(AudioURL.THUNDER_URL);
+    setState(() {
+      playerState1 = PlayerState1.playing1;
+    });
+  }
+  Future stopThunder() async {
+    await audioPlayer1.stop();
+    setState(() {
+      playerState1 = PlayerState1.stopped1;
     });
   }
 
-  Future<void> playMusic({required String audioURL}) async {
-    await audioPlayer.play(audioURL);
+  Future playRain() async {
+    await audioPlayer.play(AudioURL.RAIN_URL);
+    setState(() {
+      playerState = PlayerState.playing;
+    });
   }
-  Future<void> pauseMusic() async {
-    await audioPlayer.pause();
+  Future stopRain() async {
+    await audioPlayer.stop();
+    setState(() {
+      playerState = PlayerState.stopped;
+    });
   }
+
 
 
   @override
@@ -64,38 +89,49 @@ class _QuoteToSpeechState extends State<QuoteToSpeech> {
               CustomBtn(
                 onPressed: () {
                   setState(() {
-                    isPlaying = false;
+                    playing = false;
                   });
                   UtilsTTS().speachTTS(
                     text: quoteToSpeechArguments.quote,
                     language: "en-US",
                   );
                 },
-                icon: Icon(isPlaying ? Icons.play_arrow_rounded : Icons.pause_rounded),
+                icon: Icon(playing ? Icons.play_arrow_rounded : Icons.pause_rounded),
                 label: "TTS",
               ),
 
-              CustomBtn(
-                onPressed: () {
-                  playerState == PlayerState.PLAYING ? pauseMusic() : playMusic(audioURL: AudioURL.BIRD_URL);
-                },
-                icon: Icon(playerState == PlayerState.PLAYING ? Icons.pause_rounded : Icons.play_arrow_rounded),
-                label: "Bird",
+              IconButton(
+                onPressed:() =>  playerState1 == PlayerState1.playing1 ? stopThunder() : playThunder(),
+                iconSize: 70.0,
+                icon:Icon(playerState1 == PlayerState1.playing1 ? Icons.pause_rounded : Icons.play_arrow_rounded, size: 55),
               ),
-              CustomBtn(
-                onPressed: () {
-                  playerState == PlayerState.PLAYING ? pauseMusic() : playMusic(audioURL: AudioURL.THUNDER_URL,);
-                },
-                icon: Icon(playerState == PlayerState.PLAYING ? Icons.pause_rounded : Icons.play_arrow_rounded),
-                label: "Thunder",
+              IconButton(
+                onPressed: () => playerState == PlayerState.playing ? stopRain() : playRain(),
+                iconSize: 55.0,
+                icon: Icon(playerState == PlayerState.playing ? Icons.pause_rounded : Icons.play_arrow_rounded),
               ),
-              CustomBtn(
-                onPressed: () {
-                  playerState == PlayerState.PLAYING ? pauseMusic() : playMusic(audioURL: AudioURL.RAIN_URL,);
-                },
-                icon: Icon(playerState == PlayerState.PLAYING ? Icons.pause_rounded : Icons.play_arrow_rounded),
-                label: "Background",
-              ),
+
+              // CustomBtn(
+              //   onPressed: () {
+              //     playerState == PlayerState.PLAYING ? pauseMusic() : playMusic(audioURL: AudioURL.BIRD_URL);
+              //   },
+              //   icon: Icon(playerState == PlayerState.PLAYING ? Icons.pause_rounded : Icons.play_arrow_rounded),
+              //   label: "Bird",
+              // ),
+              // CustomBtn(
+              //   onPressed: () {
+              //     playerState == PlayerState.PLAYING ? pauseMusic() : playMusic(audioURL: AudioURL.THUNDER_URL,);
+              //   },
+              //   icon: Icon(playerState == PlayerState.PLAYING ? Icons.pause_rounded : Icons.play_arrow_rounded),
+              //   label: "Thunder",
+              // ),
+              // CustomBtn(
+              //   onPressed: () {
+              //     playerState1 == PlayerState.PLAYING ? pauseMusic() : playMusic(audioURL: AudioURL.RAIN_URL,);
+              //   },
+              //   icon: Icon(playerState1 == PlayerState.PLAYING ? Icons.pause_rounded : Icons.play_arrow_rounded),
+              //   label: "Background",
+              // ),
             ],
           ),
         ],
@@ -103,3 +139,24 @@ class _QuoteToSpeechState extends State<QuoteToSpeech> {
     );
   }
 }
+
+// FutureBuilder<List<Audio>?>(
+// future: AudioService.getAudios(),
+// builder: (context, snapshot){
+// if(snapshot.hasData){
+// List<Audio>? audios = snapshot.data;
+// print(audios?[0].audioName);
+// return Center(
+// child: Text("Connected"),
+// );
+// }else if(snapshot.hasError){
+// return Center(
+// child: Text("Error......."),
+// );
+// }
+// return Center(
+// child: Text("Loading......."),
+// );
+// },
+// ),
+

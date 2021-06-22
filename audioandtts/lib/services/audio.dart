@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:audioandtts/config.dart';
 import 'package:audioandtts/models/audio.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,9 +5,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class AudioService{
   static Future<List<Audio>?> getAudios() async {
     CollectionReference response = Config.db.collection("audio");
-    QuerySnapshot snapshot = await response.get();
-    snapshot.docs.map<Audio?>((element){
-      var data = element.data() as Map<String, dynamic>;
+    QuerySnapshot<Object?> snapshot = await response.get();
+    return snapshot.docs.map<Audio>((data) {
       return Audio.fromJson(data);
     }).toList();
   }
