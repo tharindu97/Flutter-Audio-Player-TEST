@@ -12,6 +12,7 @@ class QuoteToSpeechArguments{
 enum PlayerState { stopped, playing, paused }
 enum PlayerState1 { stopped1, playing1, paused1 }
 enum PlayerState2 { stopped2, playing2, paused2 }
+enum TtsState { playing, stopped }
 
 class QuoteToSpeech extends StatefulWidget {
   static const routeName = "/quoteToSpeech";
@@ -20,8 +21,10 @@ class QuoteToSpeech extends StatefulWidget {
 }
 
 class _QuoteToSpeechState extends State<QuoteToSpeech> {
-  bool playing = true;
 
+  TtsState ttsState = TtsState.stopped;
+  get isPlayingTTS => ttsState == TtsState.playing;
+  get isStoppedTTS => ttsState == TtsState.stopped;
   //for first audio
   late AudioPlayer audioPlayer;
   PlayerState playerState = PlayerState.stopped;
@@ -43,6 +46,12 @@ class _QuoteToSpeechState extends State<QuoteToSpeech> {
     audioPlayer =  AudioPlayer();
     audioPlayer1 =  AudioPlayer();
     audioPlayer2 = AudioPlayer();
+    UtilsTTS.flutterTts.setCompletionHandler(() {
+      setState(() {
+        ttsState = TtsState.stopped;
+        print("Complete");
+      });
+    });
   }
 
   //for first audio
@@ -109,17 +118,15 @@ class _QuoteToSpeechState extends State<QuoteToSpeech> {
           Wrap(
             spacing: 10.0,
             children: [
+
               CustomBtn(
                 onPressed: () {
                   setState(() {
-                    playing = false;
+                    ttsState == TtsState.stopped ? ttsState = TtsState.playing : ttsState = TtsState.stopped;
                   });
-                  UtilsTTS().speachTTS(
-                    text: quoteToSpeechArguments.quote,
-                    language: "en-US",
-                  );
+                  ttsState == TtsState.playing ? UtilsTTS().speachTTS(text: quoteToSpeechArguments.quote, language: "en-US",) : UtilsTTS().stopTTS();
                 },
-                icon: Icon(playing ? Icons.play_arrow_rounded : Icons.pause_rounded),
+                icon: Icon(ttsState == TtsState.playing ? Icons.pause_rounded : Icons.play_arrow_rounded),
                 label: "TTS",
               ),
 

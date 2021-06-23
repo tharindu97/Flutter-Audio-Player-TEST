@@ -29,18 +29,10 @@ class HomePage extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
               ),
-              Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Text(
-                  quote?.quote ?? '',
-                  style: TextStyle(fontSize: 25.0),
-                  textAlign: TextAlign.justify,
-                ),
-              ),
               CustomBtn(
                   onPressed: () => Navigator.of(context).pushNamed(QuoteToSpeech.routeName, arguments: QuoteToSpeechArguments(quote: quote!.quote),),
-                  icon: Icon(Icons.play_arrow_rounded),
-                  label: "Next",
+                  icon: Icon(Icons.label),
+                  label: "Test TTS",
               ),
             ],
           );
