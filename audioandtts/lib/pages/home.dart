@@ -1,11 +1,18 @@
 import 'package:audioandtts/models/quote.dart';
+import 'package:audioandtts/pages/all_quotes_page.dart';
 import 'package:audioandtts/pages/quoteToSpeech.dart';
 import 'package:audioandtts/services/quote.dart';
 import 'package:audioandtts/widgets/customBtn.dart';
 import 'package:flutter/material.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   static const routerName = "/home";
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,6 +40,12 @@ class HomePage extends StatelessWidget {
                   onPressed: () => Navigator.of(context).pushNamed(QuoteToSpeech.routeName, arguments: QuoteToSpeechArguments(quote: quote!.quote),),
                   icon: Icon(Icons.label),
                   label: "Test TTS",
+              ),
+              SizedBox(height: 20.0,),
+              CustomBtn(
+                onPressed: () => Navigator.of(context).pushNamed(AllQuotes.routerName),
+                icon: Icon(Icons.label),
+                label: "All Quotes",
               ),
             ],
           );

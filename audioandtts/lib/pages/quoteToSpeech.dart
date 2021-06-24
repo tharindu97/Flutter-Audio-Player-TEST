@@ -3,6 +3,7 @@ import 'package:audioandtts/utils/textToSpeech.dart';
 import 'package:audioandtts/widgets/customBtn.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class QuoteToSpeechArguments{
   final String quote;
@@ -21,6 +22,9 @@ class QuoteToSpeech extends StatefulWidget {
 }
 
 class _QuoteToSpeechState extends State<QuoteToSpeech> {
+  double soundValue = 0.2;
+  final String text =
+      "The Sigiriya Rock is actually a hardened magma plug from an extinct volcano. The most significant feature of the rock would be the Lion staircase leading to the palace garden. The Lion could be visualized as a huge figure towering against the granite cliff. The opened mouth of the Lion leads to the staircase built of bricks and timber. However the only remains of this majestic structure are the two paws and the masonry walls surrounding it. Nevertheless the cuts and groves in the rock face give an impression of a lion figure. There are only two pockets of paintings covering most of the western face of the rock. The ladies depicted in the paintings have been identified as Apsaras. However a lot of these ladies have been wiped out when the palace was again converted into a monastery so as to not to disturb meditation.";
 
   TtsState ttsState = TtsState.stopped;
   get isPlayingTTS => ttsState == TtsState.playing;
@@ -56,6 +60,7 @@ class _QuoteToSpeechState extends State<QuoteToSpeech> {
 
   //for first audio
   Future playRain() async {
+    await audioPlayer.setVolume(0.2);
     await audioPlayer.play(AudioURL.RAIN_URL);
     setState(() {
       playerState = PlayerState.playing;
@@ -105,12 +110,12 @@ class _QuoteToSpeechState extends State<QuoteToSpeech> {
       appBar: AppBar(
         title: Text("Quote To Speech"),
       ),
-      body: Column(
+      body: ListView(
         children: [
           Container(
-            margin: EdgeInsets.all(10.0),
+            margin: EdgeInsets.all(20.0),
             child: Text(
-              quoteToSpeechArguments.quote,
+              text,
               style: TextStyle(fontSize: 20.0),
               textAlign: TextAlign.justify,
             ),
@@ -118,18 +123,30 @@ class _QuoteToSpeechState extends State<QuoteToSpeech> {
           Wrap(
             spacing: 10.0,
             children: [
-
               CustomBtn(
                 onPressed: () {
                   setState(() {
                     ttsState == TtsState.stopped ? ttsState = TtsState.playing : ttsState = TtsState.stopped;
                   });
-                  ttsState == TtsState.playing ? UtilsTTS().speachTTS(text: quoteToSpeechArguments.quote, language: "en-US",) : UtilsTTS().stopTTS();
+                  ttsState == TtsState.playing ? UtilsTTS().speachTTS(text: text, language: "en-US",soundValue: soundValue) : UtilsTTS().stopTTS();
                 },
                 icon: Icon(ttsState == TtsState.playing ? Icons.pause_rounded : Icons.play_arrow_rounded),
                 label: "TTS",
               ),
-
+              Slider(
+                value: soundValue,
+                min: 0,
+                max: 1,
+                activeColor: Colors.red,
+                inactiveColor: Colors.red.shade100,
+                onChanged: (value){
+                  setState(() {
+                    soundValue = value;
+                  });
+                },
+                divisions: 10,
+                label: "$soundValue",
+              ),
               CustomBtn(
                 onPressed: () => playerState2 == PlayerState2.playing2 ? stopBird() : playBird(),
                 icon: Icon(playerState2 == PlayerState2.playing2 ? Icons.pause_rounded : Icons.play_arrow_rounded),
@@ -145,6 +162,10 @@ class _QuoteToSpeechState extends State<QuoteToSpeech> {
                 icon: Icon(playerState == PlayerState.playing ? Icons.pause_rounded : Icons.play_arrow_rounded),
                 label: "Rain",
               ),
+              // FadeInImage.assetNetwork(
+              //     placeholder: placeholder,
+              //     image: image
+              // ),
             ],
           ),
         ],
