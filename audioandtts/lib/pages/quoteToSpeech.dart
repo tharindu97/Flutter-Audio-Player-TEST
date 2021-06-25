@@ -23,6 +23,7 @@ class QuoteToSpeech extends StatefulWidget {
 
 class _QuoteToSpeechState extends State<QuoteToSpeech> {
   double soundValue = 0.2;
+  double backGroundSound = 0.2;
   final String text =
       "The Sigiriya Rock is actually a hardened magma plug from an extinct volcano. The most significant feature of the rock would be the Lion staircase leading to the palace garden. The Lion could be visualized as a huge figure towering against the granite cliff. The opened mouth of the Lion leads to the staircase built of bricks and timber. However the only remains of this majestic structure are the two paws and the masonry walls surrounding it. Nevertheless the cuts and groves in the rock face give an impression of a lion figure. There are only two pockets of paintings covering most of the western face of the rock. The ladies depicted in the paintings have been identified as Apsaras. However a lot of these ladies have been wiped out when the palace was again converted into a monastery so as to not to disturb meditation.";
 
@@ -50,6 +51,7 @@ class _QuoteToSpeechState extends State<QuoteToSpeech> {
     audioPlayer =  AudioPlayer();
     audioPlayer1 =  AudioPlayer();
     audioPlayer2 = AudioPlayer();
+    audioPlayer.setVolume(backGroundSound);
     UtilsTTS.flutterTts.setCompletionHandler(() {
       setState(() {
         ttsState = TtsState.stopped;
@@ -60,8 +62,7 @@ class _QuoteToSpeechState extends State<QuoteToSpeech> {
 
   //for first audio
   Future playRain() async {
-    await audioPlayer.setVolume(0.2);
-    await audioPlayer.play(AudioURL.RAIN_URL);
+    await audioPlayer.play(AudioURL.RAIN_URL, volume: backGroundSound);
     setState(() {
       playerState = PlayerState.playing;
     });
@@ -162,6 +163,20 @@ class _QuoteToSpeechState extends State<QuoteToSpeech> {
                 icon: Icon(playerState == PlayerState.playing ? Icons.pause_rounded : Icons.play_arrow_rounded),
                 label: "Rain",
               ),
+              Slider(
+                value: backGroundSound,
+                min: 0,
+                max: 1,
+                activeColor: Colors.green,
+                inactiveColor: Colors.green.shade100,
+                onChanged: (value){
+                  setState(() {
+                    backGroundSound = value;
+                  });
+                },
+                divisions: 10,
+                label: "$backGroundSound",
+              ),
               // FadeInImage.assetNetwork(
               //     placeholder: placeholder,
               //     image: image
@@ -173,24 +188,4 @@ class _QuoteToSpeechState extends State<QuoteToSpeech> {
     );
   }
 }
-
-// FutureBuilder<List<Audio>?>(
-// future: AudioService.getAudios(),
-// builder: (context, snapshot){
-// if(snapshot.hasData){
-// List<Audio>? audios = snapshot.data;
-// print(audios?[0].audioName);
-// return Center(
-// child: Text("Connected"),
-// );
-// }else if(snapshot.hasError){
-// return Center(
-// child: Text("Error......."),
-// );
-// }
-// return Center(
-// child: Text("Loading......."),
-// );
-// },
-// ),
 

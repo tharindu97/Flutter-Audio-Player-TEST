@@ -1,3 +1,6 @@
+import 'package:audioandtts/models/quotes.dart';
+import 'package:audioandtts/services/quotes.dart';
+import 'package:audioandtts/widgets/quotes_list.dart';
 import 'package:flutter/material.dart';
 
 class AllQuotes extends StatefulWidget {
@@ -7,29 +10,31 @@ class AllQuotes extends StatefulWidget {
 }
 
 class _AllQuotesState extends State<AllQuotes> {
-  double rating = 10;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Slider(
-              value: rating,
-              min: 0,
-              max: 100,
-              activeColor: Colors.red,
-              inactiveColor: Colors.red.shade100,
-              onChanged: (value){
-                setState(() {
-                  rating = value;
-                });
-              },
-              divisions: 10,
-              label: "$rating",
-          ),
-        ],
+      appBar: AppBar(
+        title: Text("All Quotes"),
+      ),
+      body: FutureBuilder<List<Quotes>?>(
+      future: QuotesService.getQuotes(),
+      builder: (context, snapshot){
+      if(snapshot.hasData){
+        List<Quotes>? quotes = snapshot.data;
+        return quotes != null ? QuotesList(quotes: quotes,) : Center(
+          child: Text("Nothing to show quotes!.."),
+        );
+      }else if(snapshot.hasError){
+        return Center(
+          child: Text("Error......."),
+        );
+      }
+        return Center(
+          child: Text("Loading......."),
+        );
+      },
       ),
     );
+
   }
 }
