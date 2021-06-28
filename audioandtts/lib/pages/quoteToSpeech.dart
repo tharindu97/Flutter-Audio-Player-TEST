@@ -23,7 +23,9 @@ class QuoteToSpeech extends StatefulWidget {
 
 class _QuoteToSpeechState extends State<QuoteToSpeech> {
   double soundValue = 0.2;
-  double backGroundSound = 0.2;
+  double birdSoundVolume = 0.2;
+  double rainSoundVolume = 0.2;
+  double thunderSoundVolume = 0.2;
   final String text =
       "The Sigiriya Rock is actually a hardened magma plug from an extinct volcano. The most significant feature of the rock would be the Lion staircase leading to the palace garden. The Lion could be visualized as a huge figure towering against the granite cliff. The opened mouth of the Lion leads to the staircase built of bricks and timber. However the only remains of this majestic structure are the two paws and the masonry walls surrounding it. Nevertheless the cuts and groves in the rock face give an impression of a lion figure. There are only two pockets of paintings covering most of the western face of the rock. The ladies depicted in the paintings have been identified as Apsaras. However a lot of these ladies have been wiped out when the palace was again converted into a monastery so as to not to disturb meditation.";
 
@@ -51,7 +53,6 @@ class _QuoteToSpeechState extends State<QuoteToSpeech> {
     audioPlayer =  AudioPlayer();
     audioPlayer1 =  AudioPlayer();
     audioPlayer2 = AudioPlayer();
-    audioPlayer.setVolume(backGroundSound);
     UtilsTTS.flutterTts.setCompletionHandler(() {
       setState(() {
         ttsState = TtsState.stopped;
@@ -62,7 +63,7 @@ class _QuoteToSpeechState extends State<QuoteToSpeech> {
 
   //for first audio
   Future playRain() async {
-    await audioPlayer.play(AudioURL.RAIN_URL, volume: backGroundSound);
+    await audioPlayer.play(AudioURL.RAIN_URL, volume: rainSoundVolume);
     setState(() {
       playerState = PlayerState.playing;
     });
@@ -76,7 +77,7 @@ class _QuoteToSpeechState extends State<QuoteToSpeech> {
 
   //for second audio
   Future playThunder() async {
-    await audioPlayer1.play(AudioURL.THUNDER_URL);
+    await audioPlayer1.play(AudioURL.THUNDER_URL, volume: thunderSoundVolume);
     setState(() {
       playerState1 = PlayerState1.playing1;
     });
@@ -90,7 +91,7 @@ class _QuoteToSpeechState extends State<QuoteToSpeech> {
 
   //for third audio
   Future playBird() async {
-    await audioPlayer2.play(AudioURL.BIRD_URL);
+    await audioPlayer2.play(AudioURL.BIRD_URL, volume: birdSoundVolume);
     setState(() {
       playerState2 = PlayerState2.playing2;
     });
@@ -121,8 +122,7 @@ class _QuoteToSpeechState extends State<QuoteToSpeech> {
               textAlign: TextAlign.justify,
             ),
           ),
-          Wrap(
-            spacing: 10.0,
+          Column(
             children: [
               CustomBtn(
                 onPressed: () {
@@ -153,10 +153,38 @@ class _QuoteToSpeechState extends State<QuoteToSpeech> {
                 icon: Icon(playerState2 == PlayerState2.playing2 ? Icons.pause_rounded : Icons.play_arrow_rounded),
                 label: "Bird",
               ),
+              Slider(
+                value: birdSoundVolume,
+                min: 0,
+                max: 1,
+                activeColor: Colors.orange,
+                inactiveColor: Colors.orange.shade100,
+                onChanged: (value){
+                  setState(() {
+                    birdSoundVolume = value;
+                  });
+                },
+                divisions: 10,
+                label: "$birdSoundVolume",
+              ),
               CustomBtn(
                 onPressed: () => playerState1 == PlayerState1.playing1 ? stopThunder() : playThunder(),
                 icon: Icon(playerState1 == PlayerState1.playing1 ? Icons.pause_rounded : Icons.play_arrow_rounded),
                 label: "Thunder",
+              ),
+              Slider(
+                value: thunderSoundVolume,
+                min: 0,
+                max: 1,
+                activeColor: Colors.pink,
+                inactiveColor: Colors.pink.shade100,
+                onChanged: (value){
+                  setState(() {
+                    thunderSoundVolume = value;
+                  });
+                },
+                divisions: 10,
+                label: "$thunderSoundVolume",
               ),
               CustomBtn(
                 onPressed: () => playerState == PlayerState.playing ? stopRain() : playRain(),
@@ -164,18 +192,18 @@ class _QuoteToSpeechState extends State<QuoteToSpeech> {
                 label: "Rain",
               ),
               Slider(
-                value: backGroundSound,
+                value: rainSoundVolume,
                 min: 0,
                 max: 1,
                 activeColor: Colors.green,
                 inactiveColor: Colors.green.shade100,
                 onChanged: (value){
                   setState(() {
-                    backGroundSound = value;
+                    rainSoundVolume = value;
                   });
                 },
                 divisions: 10,
-                label: "$backGroundSound",
+                label: "$rainSoundVolume",
               ),
               // FadeInImage.assetNetwork(
               //     placeholder: placeholder,
