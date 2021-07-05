@@ -1,6 +1,7 @@
 import 'package:audioandtts/models/quote.dart';
 import 'package:audioandtts/pages/all_quotes_page.dart';
 import 'package:audioandtts/pages/quoteToSpeech.dart';
+import 'package:audioandtts/pages/quotes_read.dart';
 import 'package:audioandtts/services/quote.dart';
 import 'package:audioandtts/widgets/customBtn.dart';
 import 'package:flutter/material.dart';
@@ -46,6 +47,14 @@ class _HomePageState extends State<HomePage> {
                 onPressed: () => Navigator.of(context).pushNamed(AllQuotes.routerName),
                 icon: Icon(Icons.label),
                 label: "All Quotes",
+              ),
+              SizedBox(
+                height: 20.0,
+              ),
+              CustomBtn(
+                  onPressed: () => Navigator.of(context).pushNamed(QuotesRead.routeName),
+                  icon: Icon(Icons.ac_unit),
+                  label: "Quotes Read"
               ),
             ],
           );

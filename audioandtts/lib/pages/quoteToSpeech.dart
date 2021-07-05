@@ -129,7 +129,7 @@ class _QuoteToSpeechState extends State<QuoteToSpeech> {
                   setState(() {
                     ttsState == TtsState.stopped ? ttsState = TtsState.playing : ttsState = TtsState.stopped;
                   });
-                  ttsState == TtsState.playing ? UtilsTTS().speachTTS(text: text, language: "en-US",soundValue: soundValue) : UtilsTTS().stopTTS();
+                  ttsState == TtsState.playing ? UtilsTTS().speachTTS(text: text, language: "en-US", soundValue: soundValue) : UtilsTTS().stopTTS();
                 },
                 icon: Icon(ttsState == TtsState.playing ? Icons.pause_rounded : Icons.play_arrow_rounded),
                 label: "TTS",
@@ -143,6 +143,7 @@ class _QuoteToSpeechState extends State<QuoteToSpeech> {
                 onChanged: (value){
                   setState(() {
                     soundValue = value;
+                    UtilsTTS.flutterTts.setVolume(value);
                   });
                 },
                 divisions: 10,
@@ -162,6 +163,7 @@ class _QuoteToSpeechState extends State<QuoteToSpeech> {
                 onChanged: (value){
                   setState(() {
                     birdSoundVolume = value;
+                    audioPlayer2.setVolume(value);
                   });
                 },
                 divisions: 10,
@@ -181,6 +183,7 @@ class _QuoteToSpeechState extends State<QuoteToSpeech> {
                 onChanged: (value){
                   setState(() {
                     thunderSoundVolume = value;
+                    audioPlayer1.setVolume(value);
                   });
                 },
                 divisions: 10,
@@ -200,15 +203,12 @@ class _QuoteToSpeechState extends State<QuoteToSpeech> {
                 onChanged: (value){
                   setState(() {
                     rainSoundVolume = value;
+                    audioPlayer.setVolume(value);
                   });
                 },
                 divisions: 10,
                 label: "$rainSoundVolume",
               ),
-              // FadeInImage.assetNetwork(
-              //     placeholder: placeholder,
-              //     image: image
-              // ),
             ],
           ),
         ],
