@@ -1,5 +1,6 @@
 import 'package:audioandtts/models/quote.dart';
 import 'package:audioandtts/pages/all_quotes_page.dart';
+import 'package:audioandtts/pages/duration_time.dart';
 import 'package:audioandtts/pages/quoteToSpeech.dart';
 import 'package:audioandtts/pages/quotes_read.dart';
 import 'package:audioandtts/services/quote.dart';
@@ -55,6 +56,14 @@ class _HomePageState extends State<HomePage> {
                   onPressed: () => Navigator.of(context).pushNamed(QuotesRead.routeName),
                   icon: Icon(Icons.ac_unit),
                   label: "Quotes Read"
+              ),
+              SizedBox(
+                height: 20.0,
+              ),
+              CustomBtn(
+                  onPressed: () => Navigator.of(context).pushNamed(DurationTimeSet.routerName),
+                  icon: Icon(Icons.access_time),
+                  label: "Duration"
               ),
             ],
           );
